@@ -1,19 +1,20 @@
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
+using Template.Validation;
 
 namespace Template.Preferences
 {
     [ApiController]
-    [ApiVersion("2.0")]
+    [ApiVersion("1.0")]
     [Route("v{version:apiVersion}/preferences/{userId}")]
-    public class PreferencesController : Controller
+    public class PreferencesController2 : Controller
     {
         /// <summary>
         /// </summary>
-        /// <param name="userId">Can be whitespace. YOLO.</param>
+        /// <param name="userId">Must not be whitespace</param>
         /// <returns></returns>
         [HttpGet]
-        public ActionResult<Destinations> Get(string userId)
+        public ActionResult<Destinations> Get([NonWhitespaceString] string userId)
         {
             var prefs = new Destinations
             {

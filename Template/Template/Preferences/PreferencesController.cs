@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Template.Preferences
 {
     [ApiController]
-    [ApiVersion("2.0")]
+    [ApiVersion("1.0", Deprecated = true)]
     [Route("v{version:apiVersion}/preferences/{userId}")]
     public class PreferencesController : Controller
     {

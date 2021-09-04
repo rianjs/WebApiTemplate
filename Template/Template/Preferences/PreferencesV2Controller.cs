@@ -5,9 +5,9 @@ using Template.Validation;
 namespace Template.Preferences
 {
     [ApiController]
-    [ApiVersion("1.0")]
+    [ApiVersion("2.0")]
     [Route("v{version:apiVersion}/preferences/{userId}")]
-    public class PreferencesController2 : Controller
+    public class PreferencesV2Controller : Controller
     {
         /// <summary>
         /// </summary>

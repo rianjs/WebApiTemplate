@@ -1,3 +1,6 @@
+using System.IO;
+using System.Linq;
+using System.Reflection;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -22,7 +25,7 @@ namespace Template
             // This section is for wiring up Swagger to support multiple API versions
             services.AddApiVersioning(opts =>
             {
-                opts.DefaultApiVersion = new ApiVersion(2, 0);
+                opts.DefaultApiVersion = new ApiVersion(1, 0);
                 opts.AssumeDefaultVersionWhenUnspecified = true;
                 opts.ReportApiVersions = true;
                 opts.ApiVersionReader = ApiVersionReader.Combine(new UrlSegmentApiVersionReader());
@@ -39,7 +42,21 @@ namespace Template
             });
             
             services.AddTransient<IConfigureOptions<SwaggerGenOptions>, ConfigureSwaggerOptions>();
-            services.AddSwaggerGen(options => options.OperationFilter<SwaggerDefaultValues>());
+            services.AddSwaggerGen(opts =>
+            {
+                opts.EnableAnnotations();
+                opts.OperationFilter<SwaggerDefaultValues>();
+                
+                var currentAssembly = Assembly.GetExecutingAssembly();  
+                var xmlDocQuery = currentAssembly.GetReferencedAssemblies()  
+                    .Union(new[] { currentAssembly.GetName() })  
+                    .Select(a => Path.Combine(Path.GetDirectoryName(currentAssembly.Location), $"{a.Name}.xml"))  
+                    .Where(f => File.Exists(f));
+                foreach (var doc in xmlDocQuery)
+                {
+                    opts.IncludeXmlComments(doc);
+                }
+            });
             // End of Swagger stuff
             
         }
